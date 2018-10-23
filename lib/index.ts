@@ -25,7 +25,7 @@ export const getJWTToken = (opts: JWTOptions): Promise<JWTResponse> => {
     let audience = opts.audience || 'https://login.salesforce.com';
     var options: jwt.SignOptions = {
 		issuer: opts.clientId,
-		audience: opts.audience,
+		audience,
 		expiresIn: 3,
 		algorithm:'RS256'
 	}
