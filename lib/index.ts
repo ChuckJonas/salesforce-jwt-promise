@@ -25,7 +25,7 @@ export const getJWTToken = (opts: JWTOptions): Promise<JWTResponse> => {
     let audience = opts.audience || 'https://login.salesforce.com';
     var options: jwt.SignOptions = {
 		issuer: opts.clientId,
-		audience,
+		audience: audienceTranslator(audience),
 		expiresIn: 3,
 		algorithm:'RS256'
 	}
@@ -71,4 +71,18 @@ export const getJWTToken = (opts: JWTOptions): Promise<JWTResponse> => {
         });
     })
 
+}
+
+// support custom domains so that newly created scratch orgs don't have to wait for login servers at test.salesforce.com to propogate
+// jwt doesn't accept custom domains as audiences, but we can use them as the token endpoint
+
+const audienceTranslator = (audience: string) => {
+    if (audience === 'https://test.salesforce.com' || audience === 'https://login.salesforce.com') {
+        // not a custom domain
+        return audience; 
+    } else if (audience.match(/(\.cs[0-9]*\.my\.salesforce.com)/)) {
+        return 'https://test.salesforce.com';
+    } else {
+        return 'https://login.salesforce.com'
+    }
 }
