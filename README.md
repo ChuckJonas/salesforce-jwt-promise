@@ -14,12 +14,13 @@ $ npm install salesforce-jwt-promise
 
 ## Usage
 
-This library contains an single export: `getJWTToken()` which accepts an object with the following properties:
+This library contains an single export: `getJWTToken()` which accepts an object with the following options object parameter:
 
 - `clientId`: The salesforce connected app consumerKey
 - `privateKey`: The private key used to sign the certificated uploaded to the connected app
 - `userName`: The user to impersonate
 - `audience`: (Optional) Defaults to https://login.salesforce.com
+- `instance_url`: (Optional) Defaults to `audience`
 
 A success response will include the following properties:
 
