@@ -1,6 +1,6 @@
 {
   "name": "salesforce-jwt-promise",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Promise Based SalesForce Auth 2.0 JWT Bearer Token Flow Implementation, written in typescript",
   "main": "./bin/index.js",
   "typings": "bin/index.d.ts",
