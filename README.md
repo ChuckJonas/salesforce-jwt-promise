@@ -1,5 +1,7 @@
 # salesforce-jwt-promise
 
+[![npm version](https://badge.fury.io/js/salesforce-jwt-promise.svg)](https://badge.fury.io/js/salesforce-jwt-promise)
+
 Promise Based implementation of [OAuth 2.0 JWT Bearer Token Flow](https://help.salesforce.com/HTViewHelpDoc?id=remoteaccess_oauth_jwt_flow.htm&language=en_US).
 
 - written in typescript
