@@ -32,14 +32,12 @@ export const getJWTToken = async (
   const audience = opts?.audience || 'https://login.salesforce.com';
   const instanceUrl = opts?.instanceUrl || audience;
 
-  const options: jwt.SignOptions = {
+  const token = jwt.sign({prn: userName}, privateKey, {
     issuer: clientId,
     audience: opts?.instanceUrl || audience,
     expiresIn: opts?.expiresIn || 3,
     algorithm: opts?.algorithm || 'RS256'
-  };
-
-  const token = jwt.sign({prn: userName}, privateKey, options);
+  });
 
   try {
     return (
