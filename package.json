@@ -5,12 +5,18 @@
   "main": "./bin/index.js",
   "typings": "bin/index.d.ts",
   "scripts": {
-    "prepublish": "tsc"
+    "prepublish": "./node_modules/.bin/tsc"
   },
   "dependencies": {
+    "@types/node": "^13.7.0",
+    "@types/qs": "^6.9.0",
     "axios": "^0.19.2",
     "jsonwebtoken": "^8.5.1",
-    "ts-custom-error": "^3.1.1"
+    "node": "^13.7.0",
+    "qs": "^6.9.1",
+    "ts-custom-error": "^3.1.1",
+    "tslint": "^6.0.0",
+    "typescript": "^3.7.5"
   },
   "repository": {
     "type": "git",
