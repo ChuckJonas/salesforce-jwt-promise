@@ -9,6 +9,7 @@ lib-cov
 pids
 logs
 results
+bin/index.js
 
 npm-debug.log
 node_modules
