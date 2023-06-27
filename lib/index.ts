@@ -36,7 +36,7 @@ export const getJWTToken = async (
     issuer: clientId,
     audience: opts?.instanceUrl || audience,
     expiresIn: opts?.expiresIn || 3,
-    algorithm: opts?.algorithm || 'RS256'
+    algorithm: opts?.algorithm || 'RS256',
   });
 
   try {
@@ -45,11 +45,11 @@ export const getJWTToken = async (
         `${instanceUrl}/services/oauth2/token`,
         qs.stringify({
           grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-          assertion: token
+          assertion: token,
         })
       )
     ).data;
-  } catch (e) {
+  } catch (e: any) {
     //because axios fails at anything over a 2xx request
     //its safe to assume that if we got here, we got something we were not expecting form SF
     if (e.isAxiosError) {
