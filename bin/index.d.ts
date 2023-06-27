@@ -16,4 +16,4 @@ export interface JWTOptions {
     expiresIn?: number;
     algorithm?: string;
 }
-export declare const getJWTToken: (clientId: string, privateKey: string, userName: string, opts?: JWTOptions | undefined) => Promise<JWTResponse>;
+export declare const getJWTToken: (clientId: string, privateKey: string, userName: string, opts?: JWTOptions) => Promise<JWTResponse>;
