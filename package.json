@@ -1,15 +1,23 @@
 {
   "name": "salesforce-jwt-promise",
-  "version": "0.1.8",
+  "version": "1.2.0",
   "description": "Promise Based SalesForce Auth 2.0 JWT Bearer Token Flow Implementation, written in typescript",
   "main": "./bin/index.js",
   "typings": "bin/index.d.ts",
   "scripts": {
-      "prepublish": "tsc"
+    "prepublish": "./node_modules/.bin/tsc"
   },
   "dependencies": {
-    "jsonwebtoken": "^8.3.0",
-    "request": "^2.88.0"
+    "axios": "^0.19.2",
+    "jsonwebtoken": "^8.5.1",
+    "qs": "^6.9.1",
+    "ts-custom-error": "^3.3.1"
+  },
+  "devDependencies": {
+    "tslint": "^6.0.0",
+    "typescript": "^5.1.0",
+    "@types/qs": "^6.9.0",
+    "@types/jsonwebtoken": "^7.2.8"
   },
   "repository": {
     "type": "git",
@@ -22,9 +30,5 @@
     "OAuth"
   ],
   "author": "Charles Jonas",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/jsonwebtoken": "^7.2.8",
-    "@types/request": "^2.47.1"
-  }
+  "license": "MIT"
 }

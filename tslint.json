@@ -1,0 +1,13 @@
+{
+    "extends": [
+        "tslint:recommended"
+    ],
+    "rules": {
+        // These aren't necessarily helpful for readability.
+        "member-ordering": false,
+        "triple-equals": false,
+        "no-void-expression": false,
+        "typedef": false,
+        "completed-docs": false,
+    }
+}

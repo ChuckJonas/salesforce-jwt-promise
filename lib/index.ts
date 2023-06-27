@@ -1,75 +1,64 @@
-import * as request from 'request'
+import Axios from 'axios';
+import {CustomError} from 'ts-custom-error';
 import * as jwt from 'jsonwebtoken';
+import * as qs from 'qs';
 
 export interface JWTResponse {
-    access_token: string;
-    scope: string;
-    instance_url: string;
-    id: string;
-    token_type: string;
+  access_token: string;
+  scope: string;
+  instance_url: string;
+  id: string;
+  token_type: string;
 }
 
-export interface JWTError {
-    error: string;
-    error_description: string;
+export class JWTError extends CustomError {
+  public constructor(public isJWTError: boolean, message?: string) {
+    super(message);
+  }
 }
 
 export interface JWTOptions {
-    clientId: string,
-    privateKey: string;
-    userName: string;
-    audience?: string; //defaults to login.salesforce.com
-    instanceUrl?: string; //defaults to audience
+  audience?: string; //defaults to login.salesforce.com
+  instanceUrl?: string; //defaults to audience
+  expiresIn?: number; //defaults to 3
+  algorithm?: string; //default to RS256
 }
 
-export const getJWTToken = (opts: JWTOptions): Promise<JWTResponse> => {
-    let audience = opts.audience || 'https://login.salesforce.com';
-    let instanceUrl = opts.instanceUrl || audience;
-    var options: jwt.SignOptions = {
-        issuer: opts.clientId,
-        audience,
-        expiresIn: 3,
-        algorithm: 'RS256'
+export const getJWTToken = async (
+  clientId: string,
+  privateKey: string,
+  userName: string,
+  opts?: JWTOptions
+): Promise<JWTResponse> => {
+  const audience = opts?.audience || 'https://login.salesforce.com';
+  const instanceUrl = opts?.instanceUrl || audience;
+  const token = jwt.sign({prn: userName}, privateKey, {
+    issuer: clientId,
+    audience: opts?.instanceUrl || audience,
+    expiresIn: opts?.expiresIn || 3,
+    algorithm: opts?.algorithm || 'RS256',
+  });
+
+  try {
+    return (
+      await Axios.post<JWTResponse>(
+        `${instanceUrl}/services/oauth2/token`,
+        qs.stringify({
+          grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+          assertion: token,
+        })
+      )
+    ).data;
+  } catch (e: any) {
+    //because axios fails at anything over a 2xx request
+    //its safe to assume that if we got here, we got something we were not expecting form SF
+    if (e.isAxiosError) {
+      throw new JWTError(
+        true,
+        `Request to salesforce failed with ${e.response.status} ${JSON.stringify(e.response.data)}`
+      );
+    } else {
+      throw new JWTError(true, e.message);
     }
-
-    var token = jwt.sign({ prn: opts.userName }, opts.privateKey, options);
-
-    return new Promise((resolve, reject) => {
-        request(
-            {
-                uri: `${instanceUrl}/services/oauth2/token`,
-                form: {
-                    'grant_type': 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-                    'assertion': token
-                },
-                method: 'post'
-            }, function (err, res, body) {
-                if (err) {
-                    reject(err);
-                };
-
-
-                if (!body) {
-                    reject(new Error('No response from oauth endpoint.'));
-                    return;
-                };
-
-                var respBody;
-                try {
-                    respBody = JSON.parse(body);
-                } catch (e) {
-                    reject(new Error('Could Not Parse Response'));
-                    return;
-                }
-
-                if (res.statusCode != 200) {
-                    let respError = respBody as JWTError;
-                    var message = 'Failed to Authenticate: ' + respError.error + ' (' + respError.error_description + ')';
-                    reject(new Error(message))
-                    return;
-                };
-
-                resolve(respBody as JWTResponse);
-            });
-    })
-}
+  }
+};
